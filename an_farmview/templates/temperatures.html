@@ -13,6 +13,11 @@
 
 <script>
 
+    // intialise
+    get_temps()
+    document.getElementById("timestamp").innerHTML = timeStamp()
+
+    // refresh
     setInterval(function() {
         get_temps()
 		document.getElementById("timestamp").innerHTML = timeStamp()
