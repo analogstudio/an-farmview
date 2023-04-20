@@ -35,4 +35,7 @@ run the flask app (with `--debug` for dev)
 poetry run python -m flask --app an_farmview.webserver.py run --host=0.0.0.0
 ```
 
-
+runs here
+```bash
+http://localhost:5000/
+```
