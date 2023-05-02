@@ -12,32 +12,14 @@ import an_farmview.ubl
 app = FastAPI()
 
 
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent
-
-app.mount('/static', StaticFiles(directory=str(Path(BASE_DIR, 'static'))), name="static")
-
-templates = Jinja2Templates(directory=str(Path(BASE_DIR, 'templates')))
+app.mount('/static', StaticFiles(directory='an_farmview/static'), name="static")
+templates = Jinja2Templates(directory='an_farmview/templates')
 
 
-
-@app.get('/')
-def root():
-    return {
-        "app_name": settings.app_name,
-        "items_per_user": settings.items_per_user,
-        "dnp": settings.fno_server,
-    }
-
-@app.get("/home", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
-
-# def home():
-#     # all the data is made in javascript in the template from api_temp api
-#     return render_template('home.html')
 
 @app.get('/api/temp')
 def api_temp():
@@ -48,8 +30,8 @@ def api_temp():
         'rear': temperature_rear,
         }
     
-    # return json.dumps(data)
     return data
+
 
 @app.get('/api/ubl')
 def api_ubl():
