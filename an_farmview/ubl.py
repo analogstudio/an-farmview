@@ -19,7 +19,6 @@ def get_redshift():
         'password': settings.fno_password
     }
 
-    print(f'{__name__} - SERVER_LOGIN_URL: {SERVER_LOGIN_URL}')
     session = requests.Session()
 
     try:
@@ -49,5 +48,7 @@ def get_redshift():
         # print("    Available: {:,}".format(int(value['totalAvailable'])))
 
         if feature_name.lower() == 'deadline-redshift':
-            return f'{value["totalAvailable"]:,}'
+            # return f'{value["totalAvailable"]:,}'
+            # just return int
+            return value["totalAvailable"]
 

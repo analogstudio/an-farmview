@@ -1,4 +1,4 @@
-import json
+import math
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -35,9 +35,25 @@ def api_temp():
 
 @app.get('/api/ubl')
 def api_ubl():
-    redshift_available = an_farmview.ubl.get_redshift()
+
+    # int total mins
+    redshift_mins = an_farmview.ubl.get_redshift()
+
+    mins_pretty = f'{redshift_mins:,}'
+
+    
+    # eg. if 10 machines / 10
+    test_mins = redshift_mins/10
+    time_days = math.floor(test_mins / (60*24))
+    time_mins_remainder = test_mins % (60*24)
+    time_hours = math.floor(time_mins_remainder / 60)
+    time_mins = int(time_mins_remainder % 60)
+
+    time_pretty = f'eg. 10 machines 24/7 - {time_days}days {time_hours}hours {time_mins}mins'
+    
     data = {
-        'redshift_available': redshift_available,
+        'redshift_mins': mins_pretty,
+        'redshift_hours_mins': time_pretty,
         }
     
     return data

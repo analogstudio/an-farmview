@@ -60,7 +60,7 @@ function get_ubl() {
             .then(response => response.json())
             .then(data => {
 
-                let text = "redshift available: " + data.redshift_available + " mins"
+                let text = "redshift available: " + data.redshift_mins + "mins </br>" + data.redshift_hours_mins
                 ubl_div.innerHTML = text
             })
         }
