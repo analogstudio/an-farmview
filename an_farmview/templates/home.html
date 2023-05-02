@@ -1,7 +1,7 @@
 <!doctype html>
 
 <head>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
     <title>an-farmview temp</title>
 </head>
 
@@ -24,10 +24,10 @@
         get_temps()
 		document.getElementById("timestamp").innerHTML = timeStamp()
         get_ubl()
-	}, 60000);
+	}, 30000);
 
     function get_temps() {
-        const api_temp_url = {{ url_for("api_temp") }}
+        const api_temp_url = "{{ url_for("api_temp") | safe }}"
         const front_div = document.getElementById("front")
         const rear_div = document.getElementById("rear")
         
@@ -53,7 +53,7 @@
         }
 
 function get_ubl() {
-        const api_ubl_url = {{ url_for("api_ubl") }}
+        const api_ubl_url = "{{ url_for("api_ubl") | safe }}"
         const ubl_div = document.getElementById("ubl")
         
         fetch(api_ubl_url)
