@@ -39,6 +39,7 @@ run fastapi via uvicorn
 ```bash
 $ poetry run uvicorn an_farmview.main:app --reload
 ```
+Uses jinja2 templates just like flask but need to [install manually](https://fastapi.tiangolo.com/advanced/templates/) 
 
 runs here
 ```bash
