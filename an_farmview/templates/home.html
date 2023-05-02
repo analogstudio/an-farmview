@@ -1,0 +1,88 @@
+<!doctype html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>an-farmview temp</title>
+</head>
+
+<body>
+    <h1 id="front">🐣</h1>
+    <h1 id="rear"></h1>
+    <h2 id="ubl"></h1>
+    <h2 id="timestamp"></h1>
+</body>
+
+<script>
+
+    // intialise
+    get_temps()
+    document.getElementById("timestamp").innerHTML = timeStamp()
+    get_ubl()
+    
+    // refresh
+    setInterval(function() {
+        get_temps()
+		document.getElementById("timestamp").innerHTML = timeStamp()
+        get_ubl()
+	}, 60000);
+
+    function get_temps() {
+        const api_temp_url = {{ url_for("api_temp")|tojson }}
+        const front_div = document.getElementById("front")
+        const rear_div = document.getElementById("rear")
+        
+        fetch(api_temp_url)
+            .then(response => response.json())
+            .then(data => {
+
+                let front_text = "front: " + data.front + "c"
+                if (data.front < 30) {
+                    front_text += "🥶"
+                }
+                if (data.front > 32) {
+                    front_text += "🥵"
+                }
+                front_div.innerHTML = front_text
+
+                let rear_text = "rear: " + data.rear + "c"
+                if (data.rear > 35) {
+                    rear_text += "🥵"
+                }
+                rear_div.innerHTML = rear_text
+            })
+        }
+
+function get_ubl() {
+        const api_ubl_url = {{ url_for("api_ubl")|tojson }}
+        const ubl_div = document.getElementById("ubl")
+        
+        fetch(api_ubl_url)
+            .then(response => response.json())
+            .then(data => {
+
+                let text = "redshift available: " + data.redshift_available + " mins"
+                ubl_div.innerHTML = text
+            })
+        }
+
+    function timeStamp() {
+        // As this is javascript this is the clients current time, not the farm
+        // Create a date object with the current time
+        var now = new Date();
+
+        // Create an array with the current month, day and time
+        var date = [ now.getDate(), now.getMonth() + 1, now.getFullYear() ];
+
+        // Create an array with the current hour, minute and second
+        var time = [ now.getHours(), now.getMinutes(), now.getSeconds() ];
+
+        // If seconds and minutes are less than 10, add a zero
+        for ( var i = 1; i < 3; i++ ) {
+            if ( time[i] < 10 ) {
+                time[i] = "0" + time[i];
+            }
+        }
+        // Return the formatted string
+        return date.join("/") + " " + time.join(":");
+    }
+</script>
