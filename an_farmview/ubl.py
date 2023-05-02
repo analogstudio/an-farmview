@@ -1,23 +1,25 @@
 import os
-import os
 import requests
-from dotenv import load_dotenv
 
-load_dotenv()  # take environment variables from .env.
+from .config import settings
 
 def get_redshift():
 
     SITE_ID = 'thinkbox.compliance.flexnetoperations.com'
-    SERVER_ID = os.environ.get('FNO_SERVER')
+    # SERVER_ID = os.environ.get('FNO_SERVER')
+    # or use fastenv pydantic settings
+    SERVER_ID = settings.fno_server
     SERVER_BASE_URL = f'https://{SITE_ID}/api/1.0/instances/{SERVER_ID}'
     SERVER_LOGIN_URL = SERVER_BASE_URL + '/authorize'
     SERVER_FEATURE_SUMMARY_URL = SERVER_BASE_URL + '/features/summaries'
+
 
     login_dict = {
         'user': 'admin',
         'password': os.environ.get('FNO_PASSWORD')
     }
 
+    print(f'{__name__} - SERVER_LOGIN_URL: {SERVER_LOGIN_URL}')
     session = requests.Session()
 
     try:

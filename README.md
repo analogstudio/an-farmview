@@ -1,6 +1,6 @@
 # an-farmview
 
-Python 3.8, Flask based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
+Python 3.8, ~~Flask~~ FastAPI based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
 Refreshes every 30seconds
 
 
@@ -30,9 +30,14 @@ first time install dependencies
 poetry install
 ```
 
-run the flask app (with `--debug` for dev)
+~~~run the flask app (with `--debug` for dev)~~~
 ```bash
 poetry run python -m flask --app an_farmview.webserver.py run --host=0.0.0.0
+```
+
+run fastapi via uvicorn
+```bash
+$ poetry run uvicorn an_farmview.main:app --reload
 ```
 
 runs here

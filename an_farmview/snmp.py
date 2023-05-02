@@ -1,9 +1,7 @@
 import os
 import pysnmp.hlapi
-from dotenv import load_dotenv
 
-load_dotenv()  # take environment variables from .env.
-
+from .config import settings
 
 def get_sensor(oid):
     """Simon not knowing how to use iterators properly
