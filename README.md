@@ -1,6 +1,6 @@
 # an-farmview
 
-Python 3.8, Flask based webpage using SNMP to get temperatures, all running via poetry.
+Python 3.8, Flask based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
 Refreshes every 30seconds
 
 
@@ -35,4 +35,7 @@ run the flask app (with `--debug` for dev)
 poetry run python -m flask --app an_farmview.webserver.py run --host=0.0.0.0
 ```
 
-
+runs here
+```bash
+http://localhost:5000/
+```
