@@ -45,6 +45,17 @@ def read_envmonitors(skip: int = 0, limit: int = 300, db: Session = Depends(get_
     return envmonitors
 
 
+@app.post("/api/setubl", response_model=schemas.UBL)
+def create_ubl(ubl: schemas.UBLCreate, db: Session = Depends(get_db)):
+    return crud.create_ubl(db=db, ubl=ubl)
+
+
+@app.get("/api/getubl", response_model=List[schemas.UBL])
+def read_ubl(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
+    ubl = crud.get_ubl(db, skip=skip, limit=limit)
+    return ubl
+
+
 @app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
