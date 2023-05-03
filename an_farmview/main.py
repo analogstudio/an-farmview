@@ -34,13 +34,13 @@ templates = Jinja2Templates(directory='an_farmview/templates')
 
 
 # using database stuff
-@app.post("/envmonitor/", response_model=schemas.EnvMonitor)
+@app.post("/envmonitor", response_model=schemas.EnvMonitor)
 def create_envmonitor(envmonitor: schemas.EnvMonitorCreate, db: Session = Depends(get_db)):
     return crud.create_envmonitor(db=db, envmonitor=envmonitor)
 
 
-@app.get("/envmonitors/", response_model=List[schemas.EnvMonitor])
-def read_envmonitors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@app.get("/envmonitors", response_model=List[schemas.EnvMonitor])
+def read_envmonitors(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
     envmonitors = crud.get_envmonitors(db, skip=skip, limit=limit)
     return envmonitors
 
@@ -60,7 +60,6 @@ def api_temp():
         }
     
     return data
-
 
 @app.get('/api/ubl')
 def api_ubl():
