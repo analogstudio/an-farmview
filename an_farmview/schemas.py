@@ -6,7 +6,6 @@ from pydantic import BaseModel
 class EnvMonitorBase(BaseModel):
     temperature01: int
     temperature02: int
-    timestamp: datetime.datetime
 
 
 class EnvMonitorCreate(EnvMonitorBase):
@@ -15,6 +14,7 @@ class EnvMonitorCreate(EnvMonitorBase):
 
 class EnvMonitor(EnvMonitorBase):
     id: int
+    timestamp: datetime.datetime
 
     class Config:
         orm_mode = True

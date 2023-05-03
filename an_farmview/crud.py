@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from . import models, schemas
 
@@ -18,7 +19,7 @@ def get_envmonitors(db: Session, skip: int = 0, limit: int = 100):
 def create_envmonitor(db: Session, envmonitor: schemas.EnvMonitorCreate):
 
     db_envmonitor = models.EnvMonitor(
-        timestamp=envmonitor.timestamp,
+        timestamp=func.now(),
         temperature01=envmonitor.temperature01,
         temperature02=envmonitor.temperature02
     )
