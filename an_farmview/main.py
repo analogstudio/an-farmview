@@ -6,14 +6,50 @@ from fastapi.templating import Jinja2Templates
 
 from .config import settings
 
+from typing import List
+
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
+
+from . import crud, models, schemas
+from .database import SessionLocal, engine
+
 import an_farmview.snmp
 import an_farmview.ubl
 
+models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 app.mount('/static', StaticFiles(directory='an_farmview/static'), name="static")
 templates = Jinja2Templates(directory='an_farmview/templates')
+
+# using database stuff
+@app.post("/envmonitor/", response_model=schemas.EnvMonitor)
+def create_envmonitor(envmonitor: schemas.EnvMonitorCreate, db: Session = Depends(get_db)):
+    
+    # db_envmonitor = crud.get_envmonitor_by_email(db, email=envmonitor.email)
+    # if db_envmonitor:
+    #     raise HTTPException(status_code=400, detail="Email already registered")
+    
+    return crud.create_envmonitor(db=db, envmonitor=envmonitor)
+
+@app.get("/envmonitors/", response_model=List[schemas.EnvMonitor])
+def read_envmonitors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    envmonitors = crud.get_envmonitors(db, skip=skip, limit=limit)
+    return envmonitors
+
+
+
+
 
 
 @app.get("/", response_class=HTMLResponse)
