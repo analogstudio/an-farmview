@@ -3,28 +3,65 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
     <title>an-farmview temp</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <h1 id="front">🐣</h1>
     <h1 id="rear"></h1>
+    <div id="temps-graph"><canvas id="myChart"></canvas></div>
     <h2 id="ubl"></h1>
     <h2 id="timestamp"></h1>
 </body>
 
+
+
 <script>
 
+    const ctx = document.getElementById('myChart');
+
+
+    const myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: [],
+          datasets: [
+            {
+                fill: '1',
+                label: 'rear',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+            },
+            {
+                fill: 'origin',
+                label: 'front',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(20, 20, 132, 0.5)',
+                borderColor: 'rgba(40, 40, 170, 1)',
+            },
+        ]
+      },
+      options: {
+      }
+    });
+
+
     // intialise
-    get_temps()
     document.getElementById("timestamp").innerHTML = timeStamp()
+    get_temps()
     get_ubl()
+    update_chart()
     
     // refresh
     setInterval(function() {
-        get_temps()
 		document.getElementById("timestamp").innerHTML = timeStamp()
+        get_temps()
         get_ubl()
-	}, 30000);
+        update_chart()
+	}, 5000);
 
     function get_temps() {
         const api_temp_url = "{{ url_for("api_temp") | safe }}"
@@ -33,26 +70,26 @@
         
         fetch(api_temp_url)
             .then(response => response.json())
-            .then(data => {
+                .then(data => {
 
-                let front_text = "front: " + data.front + "c"
-                if (data.front < 30) {
-                    front_text += "🥶"
-                }
-                if (data.front > 32) {
-                    front_text += "🥵"
-                }
-                front_div.innerHTML = front_text
+                    let front_text = "front: " + data.front + "c"
+                    if (data.front < 30) {
+                        front_text += "🥶"
+                    }
+                    if (data.front > 32) {
+                        front_text += "🥵"
+                    }
+                    front_div.innerHTML = front_text
 
-                let rear_text = "rear: " + data.rear + "c"
-                if (data.rear > 35) {
-                    rear_text += "🥵"
-                }
-                rear_div.innerHTML = rear_text
-            })
-        }
+                    let rear_text = "rear: " + data.rear + "c"
+                    if (data.rear > 35) {
+                        rear_text += "🥵"
+                    }
+                    rear_div.innerHTML = rear_text
+                })
+            }
 
-function get_ubl() {
+    function get_ubl() {
         const api_ubl_url = "{{ url_for("api_ubl") | safe }}"
         const ubl_div = document.getElementById("ubl")
         
@@ -84,5 +121,25 @@ function get_ubl() {
         }
         // Return the formatted string
         return date.join("/") + " " + time.join(":");
+    }
+
+    function update_chart() {
+        let api_url = "{{ url_for("read_envmonitors") | safe }}"
+
+        fetch(api_url)
+            .then(response => response.json())
+            .then(data => {
+                
+                // data is latest first, needed for api, but reverse for chart
+                data = data.reverse()
+                myLineChart.data.datasets[0].data = data.map(row => row.temperature01)
+                myLineChart.data.datasets[1].data = data.map(row => row.temperature02)
+                myLineChart.data.labels = data.map(row => row.timestamp)           
+
+                myLineChart.update('active')
+            })
+        
+
+
     }
 </script>
