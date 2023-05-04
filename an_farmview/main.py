@@ -29,6 +29,7 @@ def get_db():
     finally:
         db.close()
 
+
 app.mount('/static', StaticFiles(directory='an_farmview/static'), name="static")
 templates = Jinja2Templates(directory='an_farmview/templates')
 
@@ -51,7 +52,7 @@ def create_ubl(ubl: schemas.UBLCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/api/getubl", response_model=List[schemas.UBL])
-def read_ubl(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
+def read_ubl(skip: int = 0, limit: int = 10000, db: Session = Depends(get_db)):
     ubl = crud.get_ubl(db, skip=skip, limit=limit)
     return ubl
 
