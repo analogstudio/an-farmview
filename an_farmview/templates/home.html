@@ -10,9 +10,16 @@
 <body>
     <h1 id="front">🐣</h1>
     <h1 id="rear"></h1>
-    <div id="temps-graph"><canvas id="temps-chart"></canvas></div>
+
+    <div class="chart-container" style="position: relative; height:25vh; width:95vw">
+        <canvas id="temps-chart"></canvas>
+    </div>
+
     <h2 id="ubl"></h1>
-    <div><canvas id="ubl-chart"></canvas></div>
+        <div class="chart-container" style="position: relative; height:25vh; width:95vw">
+            <canvas id="ubl-chart"></canvas>
+        </div>
+    
     <h2 id="timestamp"></h1>
 </body>
 
@@ -44,6 +51,7 @@
         ]
       },
       options: {
+        maintainAspectRatio: false,
         scales: {
             x: {
                 type: 'time',
@@ -53,7 +61,12 @@
                     },
                     unit: "minute",
                 }
-            }
+            },
+            y: {
+                suggestedMin: 20,
+                suggestedMax: 45,
+                
+            },
         }
       }
     });
@@ -84,6 +97,7 @@
         ]
       },
       options: {
+        maintainAspectRatio: false,
         scales: {
             x: {
                 type: 'time',
@@ -208,6 +222,8 @@
                 // data is latest first, needed for api, but reverse for chart
                 data = data.reverse()
 
+                console.log(data)
+                
                 ublLineChart.data.datasets[0].data = data.map(row => row.redshift_entitled)
                 ublLineChart.data.datasets[1].data = data.map(row => row.redshift_used)
                 ublLineChart.data.labels = data.map(row => row.timestamp)
