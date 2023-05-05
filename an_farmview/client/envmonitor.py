@@ -1,10 +1,11 @@
+import os
 import requests
 import pprint
 
 import an_farmview.snmp
     
 def post():
-    url = 'http://127.0.0.1:5000/envmonitor'
+    url = f'{os.getenv("AN_FARMVIEW_API_URL")}/envmonitor'
 
     data = {
         "temperature01": an_farmview.snmp.get_temperature_rear(),
@@ -15,7 +16,7 @@ def post():
     pprint.pprint(r.json())
 
 def get():
-    url_get = 'http://127.0.0.1:5000/envmonitors'
+    url_get = f'{os.getenv("AN_FARMVIEW_API_URL")}/envmonitors'
     getr = requests.get(url_get)
     pprint.pprint(getr.json())
 
