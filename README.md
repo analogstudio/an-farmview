@@ -43,3 +43,7 @@ runs here
 ```bash
 http://localhost:5000/
 ```
+
+## heroku
+when copying DATABASE_URL from heroku into `.env`
+poetry needs `postgresql://` instead of `postgres://`
