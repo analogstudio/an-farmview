@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "an_farmview"}]
 
 [tool.poetry.dependencies]
-python = "3.8.0"
+python = "3.11.3"
 pysnmplib = "^5.0.21"
 python-dotenv = "^1.0.0"
 fastapi = {extras = ["all"], version = "^0.95.1"}
