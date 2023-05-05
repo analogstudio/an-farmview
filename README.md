@@ -47,3 +47,8 @@ http://localhost:5000/
 ## heroku
 when copying DATABASE_URL from heroku into `.env`
 poetry needs `postgresql://` instead of `postgres://`
+
+sqlalchemy needs `psycopg2` for some reason not installed with it.
+```bash
+poetry add psycopg2
+```
