@@ -29,6 +29,7 @@ def get_db():
     finally:
         db.close()
 
+
 app.mount('/static', StaticFiles(directory='an_farmview/static'), name="static")
 templates = Jinja2Templates(directory='an_farmview/templates')
 
@@ -43,6 +44,17 @@ def create_envmonitor(envmonitor: schemas.EnvMonitorCreate, db: Session = Depend
 def read_envmonitors(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
     envmonitors = crud.get_envmonitors(db, skip=skip, limit=limit)
     return envmonitors
+
+
+@app.post("/api/setubl", response_model=schemas.UBL)
+def create_ubl(ubl: schemas.UBLCreate, db: Session = Depends(get_db)):
+    return crud.create_ubl(db=db, ubl=ubl)
+
+
+@app.get("/api/getubl", response_model=List[schemas.UBL])
+def read_ubl(skip: int = 0, limit: int = 10000, db: Session = Depends(get_db)):
+    ubl = crud.get_ubl(db, skip=skip, limit=limit)
+    return ubl
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -69,7 +81,6 @@ def api_ubl():
 
     mins_pretty = f'{redshift_mins:,}'
 
-    
     # eg. if 10 machines / 10
     test_mins = redshift_mins/10
     time_days = math.floor(test_mins / (60*24))
