@@ -91,11 +91,11 @@ def get_redshift2():
         # We only have one version of any license
         value = value['0.00']
 
-        print("Feature:       {:} ".format(feature_name))
-        print("    Entitled:  {:,}".format(int(value['totalCount'])))
-        print("    Used:      {:,}".format(int(value['totalUsed'])))
-        print("    Overage:   {:,}".format(int(value['totalOverdraftCount'])))
-        print("    Available: {:,}".format(int(value['totalAvailable'])))
+        # print("Feature:       {:} ".format(feature_name))
+        # print("    Entitled:  {:,}".format(int(value['totalCount'])))
+        # print("    Used:      {:,}".format(int(value['totalUsed'])))
+        # print("    Overage:   {:,}".format(int(value['totalOverdraftCount'])))
+        # print("    Available: {:,}".format(int(value['totalAvailable'])))
 
         if feature_name.lower() == 'deadline-redshift':
             dict = {

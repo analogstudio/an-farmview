@@ -81,7 +81,6 @@ def api_ubl():
 
     mins_pretty = f'{redshift_mins:,}'
 
-    
     # eg. if 10 machines / 10
     test_mins = redshift_mins/10
     time_days = math.floor(test_mins / (60*24))
