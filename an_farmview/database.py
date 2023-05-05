@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 # SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 # use postgresql
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
+SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://')
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL

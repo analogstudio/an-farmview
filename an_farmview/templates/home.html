@@ -26,6 +26,10 @@
 
 <script>
 
+    // define const for temps and ubl data
+    const temps_data = []
+    const temps_ubl = []
+
     const ctx = document.getElementById('temps-chart');
     const myLineChart = new Chart(ctx, {
       type: 'line',
@@ -121,45 +125,20 @@
 
     // intialise
     document.getElementById("timestamp").innerHTML = timeStamp()
-    get_temps()
-    get_ubl()
-    update_chart()
+    update_temps_chart()
     update_ubl_chart()
+    // get_temps()
+    get_ubl()
     
     // refresh
     setInterval(function() {
 		document.getElementById("timestamp").innerHTML = timeStamp()
-        get_temps()
-        get_ubl()
-        update_chart()
+        update_temps_chart()
         update_ubl_chart()
+        // get_temps()
+        get_ubl()
 	}, 30000);
 
-    function get_temps() {
-        const api_temp_url = "{{ url_for("api_temp") | safe }}"
-        const front_div = document.getElementById("front")
-        const rear_div = document.getElementById("rear")
-        
-        fetch(api_temp_url)
-            .then(response => response.json())
-                .then(data => {
-
-                    let front_text = "front: " + data.front + "c"
-                    if (data.front < 30) {
-                        front_text += "🥶"
-                    }
-                    if (data.front > 32) {
-                        front_text += "🥵"
-                    }
-                    front_div.innerHTML = front_text
-
-                    let rear_text = "rear: " + data.rear + "c"
-                    if (data.rear > 35) {
-                        rear_text += "🥵"
-                    }
-                    rear_div.innerHTML = rear_text
-                })
-            }
 
     function get_ubl() {
         const api_ubl_url = "{{ url_for("api_ubl") | safe }}"
@@ -173,6 +152,7 @@
                 ubl_div.innerHTML = text
             })
         }
+
 
     function timeStamp() {
         // As this is javascript this is the clients current time, not the farm
@@ -195,7 +175,8 @@
         return date.join("/") + " " + time.join(":");
     }
 
-    function update_chart() {
+
+    function update_temps_chart() {
         let api_url = "{{ url_for("read_envmonitors") | safe }}"
 
         fetch(api_url)
@@ -204,11 +185,35 @@
                 
                 // data is latest first, needed for api, but reverse for chart
                 data = data.reverse()
+                
+                // pop off the latest for display
+                latest_data = data.pop()
+
                 myLineChart.data.datasets[0].data = data.map(row => row.temperature01)
                 myLineChart.data.datasets[1].data = data.map(row => row.temperature02)
                 myLineChart.data.labels = data.map(row => row.timestamp)           
 
                 myLineChart.update('active')
+
+                // just get the latest from API
+                const front_div = document.getElementById("front")
+                const rear_div = document.getElementById("rear")
+
+                let front_text = "front: " + latest_data.temperature01 + "c"
+                if (latest_data.temperature01 < 30) {
+                    front_text += "🥶"
+                }
+                if (latest_data.temperature01 > 32) {
+                    front_text += "🥵"
+                }
+                front_div.innerHTML = front_text
+
+                let rear_text = "rear: " + latest_data.temperature02 + "c"
+                if (latest_data.temperature02 > 35) {
+                    rear_text += "🥵"
+                }
+                rear_div.innerHTML = rear_text
+
             })
     }
 
