@@ -1,6 +1,6 @@
 # an-farmview
 
-Python 3.8, ~~Flask~~ FastAPI based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
+Python 3.11.3, ~~Flask~~ FastAPI based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
 Refreshes every 30seconds
 
 
@@ -10,19 +10,17 @@ SNMP_COMMUNITY=public
 SNMP_IP=ip of snmp device
 ```
 
-Make sure poetry is using Python 3.8
+Make sure poetry is using Python 3.11.3
 
 ```bash
 $ where python
-C:\Program Files\Python38\python.exe
-C:\Python37\python.exe
-C:\Python27\python.exe
-C:\Users\sreeves\AppData\Local\Microsoft\WindowsApps\python.exe
-C:\Users\sreeves\AppData\Roaming\pypoetry\venv\Scripts\python.exe
+...
+C:\Program Files\Python311\python.exe
+...
 ```
 
 ```bash
-poetry env use "C:\Program Files\Python38\python.exe"
+poetry env use "C:\Program Files\Python311\python.exe"
 ```
 
 first time install dependencies
