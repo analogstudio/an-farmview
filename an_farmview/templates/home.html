@@ -199,17 +199,17 @@
                 const front_div = document.getElementById("front")
                 const rear_div = document.getElementById("rear")
 
-                let front_text = "front: " + latest_data.temperature01 + "c"
-                if (latest_data.temperature01 < 30) {
+                let front_text = "front: " + latest_data.temperature02 + "c"
+                if (latest_data.temperature02 < 30) {
                     front_text += "🥶"
                 }
-                if (latest_data.temperature01 > 32) {
+                if (latest_data.temperature02 > 32) {
                     front_text += "🥵"
                 }
                 front_div.innerHTML = front_text
 
-                let rear_text = "rear: " + latest_data.temperature02 + "c"
-                if (latest_data.temperature02 > 35) {
+                let rear_text = "rear: " + latest_data.temperature01 + "c"
+                if (latest_data.temperature01 > 35) {
                     rear_text += "🥵"
                 }
                 rear_div.innerHTML = rear_text
@@ -227,8 +227,8 @@
                 // data is latest first, needed for api, but reverse for chart
                 data = data.reverse()
 
-                console.log(data)
-                
+                // temp01 is rear
+                // temp02 is front
                 ublLineChart.data.datasets[0].data = data.map(row => row.redshift_entitled)
                 ublLineChart.data.datasets[1].data = data.map(row => row.redshift_used)
                 ublLineChart.data.labels = data.map(row => row.timestamp)
