@@ -83,22 +83,21 @@ def api_ubl_info(db: Session = Depends(get_db)):
     # read from our API
     ubl = crud.get_ubl(db, skip=0, limit=1)
     
-    # mins = [ubl[0].redshift_available, ubl[0].nuke_available]
-    mins = [ubl[0].redshift_available]
+    mins = [ubl[0].redshift_available, ubl[0].nuke_available]
 
-    return_string = ''
+    return_string = []
 
-    for product in mins:
-        return_string += mins_info(product)
+    return_string.append(mins_info(mins[0], 'Redshift'))
+    return_string.append(mins_info(mins[1], 'Nuke'))
 
     data = {
         'redshift_mins': f'{mins[0]:,}',
-        'redshift_hours_mins': return_string,
+        'redshift_hours_mins': '<br>'.join(return_string),
         }
     
     return data
 
-def mins_info(mins):
+def mins_info(mins, name):
 
     # eg. if 10 machines / 10
     test_mins = mins / 10
@@ -107,4 +106,4 @@ def mins_info(mins):
     time_hours = math.floor(time_mins_remainder / 60)
     time_mins = int(time_mins_remainder % 60)
 
-    return f'eg. 10 machines 24/7 - {time_days}days {time_hours}hours {time_mins}mins'
+    return f'{name}: eg. 10 machines 24/7 : {time_days}days {time_hours}hours {time_mins}mins'
