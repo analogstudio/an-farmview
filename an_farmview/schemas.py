@@ -25,6 +25,10 @@ class UBLBase(BaseModel):
     redshift_used: int
     redshift_available: int
 
+    nuke_entitled: int
+    nuke_used: int
+    nuke_available: int
+
 
 class UBLCreate(UBLBase):
     pass

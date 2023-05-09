@@ -16,41 +16,41 @@
     </div>
 
     <h2 id="ubl"></h1>
-        <div class="chart-container" style="position: relative; height:25vh; width:95vw">
-            <canvas id="ubl-chart"></canvas>
-        </div>
-    
+    <div class="chart-container" style="position: relative; height:25vh; width:95vw">
+        <canvas id="ubl-chart-redshift"></canvas>
+    </div>
+
+    <div class="chart-container" style="position: relative; height:25vh; width:95vw">
+        <canvas id="ubl-chart-nuke"></canvas>
+    </div>
+
     <h2 id="timestamp"></h1>
 </body>
 
 
 <script>
 
-    // define const for temps and ubl data
-    const temps_data = []
-    const temps_ubl = []
-
     const ctx = document.getElementById('temps-chart');
-    const myLineChart = new Chart(ctx, {
+    const TempsLineChart = new Chart(ctx, {
       type: 'line',
       data: {
           labels: [],
           datasets: [
             {
                 fill: '1',
-                label: 'rear',
+                label: 'Rear Temperature',
                 data: [],
                 borderWidth: 1,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgba(122, 227, 66, 0.2)',
+                borderColor: 'rgba(122, 227, 66, 1)',
             },
             {
                 fill: 'origin',
-                label: 'front',
+                label: 'Front Temperature',
                 data: [],
                 borderWidth: 1,
-                backgroundColor: 'rgba(20, 20, 132, 0.5)',
-                borderColor: 'rgba(40, 40, 170, 1)',
+                backgroundColor: 'rgba(176, 217, 154, 0.2)',
+                borderColor: 'rgba(176, 217, 154, 1)',
             },
         ]
       },
@@ -64,39 +64,41 @@
                         "minute": "d MMM HH:mm"
                     },
                     unit: "minute",
-                }
+                },
+                ticks: {
+                    maxTicksLimit: 10,
+                },
             },
             y: {
                 suggestedMin: 20,
                 suggestedMax: 45,
-                
             },
         }
       }
     });
 
-    const ctx2 = document.getElementById('ubl-chart');
-    const ublLineChart = new Chart(ctx2, {
+    const ctxRedshift = document.getElementById('ubl-chart-redshift');
+    const ublLineChartRedshift = new Chart(ctxRedshift, {
       type: 'line',
       data: {
           labels: [],
           datasets: [
             {
                 fill: '1',
-                label: 'entitled',
+                label: 'Redshift entitled mins',
                 data: [],
                 borderWidth: 1,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgba(227, 5, 27, 0.2)',
+                borderColor: 'rgba(227, 5, 27, 1)',
                 pointStyle: false,
             },
             {
                 fill: 'origin',
-                label: 'used',
+                label: 'Redshift used mins',
                 data: [],
                 borderWidth: 1,
-                backgroundColor: 'rgba(20, 20, 132, 0.5)',
-                borderColor: 'rgba(40, 40, 170, 1)',
+                backgroundColor: 'rgba(212, 142, 149, 0.2)',
+                borderColor: 'rgba(212, 142, 149, 1)',
             },
         ]
       },
@@ -107,10 +109,14 @@
                 type: 'time',
                 time: {
                     displayFormats: {
-                        "hour": "d MMM HH:mm"
+                        "hour": "d MMM HH:mm",
                     },
                     unit: "hour",
-                }
+                },
+                ticks: {
+                    maxTicksLimit: 6,
+                },
+                
             }
         },
         plugins: {
@@ -123,11 +129,63 @@
       }
     });
 
+    const ctxNuke= document.getElementById('ubl-chart-nuke');
+    const ublLineChartNuke = new Chart(ctxNuke, {
+      type: 'line',
+      data: {
+          labels: [],
+          datasets: [
+            {
+                fill: '1',
+                label: 'Nuke entitled mins',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(166, 132, 41, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                pointStyle: false,
+            },
+            {
+                fill: 'origin',
+                label: 'Nuke used mins',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(204, 115, 27, 0.2)',
+                borderColor: 'rgba(204, 115, 27, 1)',
+            },
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        "hour": "d MMM HH:mm",
+                    },
+                    unit: "hour",
+                },
+                ticks: {
+                    maxTicksLimit: 6,
+                },
+                
+            }
+        },
+        plugins: {
+            decimation: {
+                enabled: true,
+                algorithm: 'lttb',
+                samples: 50,
+            }
+          },
+      }
+    });
+
+
     // intialise
     document.getElementById("timestamp").innerHTML = timeStamp()
     update_temps_chart()
     update_ubl_chart()
-    // get_temps()
     get_ubl()
     
     // refresh
@@ -135,19 +193,18 @@
 		document.getElementById("timestamp").innerHTML = timeStamp()
         update_temps_chart()
         update_ubl_chart()
-        // get_temps()
         get_ubl()
 	}, 30000);
 
 
     function get_ubl() {
-        const api_ubl_url = "{{ url_for("api_ubl") | safe }}"
+        const api_ubl_url = "{{ url_for("api_ubl_info") | safe }}"
         const ubl_div = document.getElementById("ubl")
         
         fetch(api_ubl_url)
             .then(response => response.json())
             .then(data => {
-
+                console.log(data)
                 let text = "redshift available: " + data.redshift_mins + "mins </br>" + data.redshift_hours_mins
                 ubl_div.innerHTML = text
             })
@@ -185,15 +242,15 @@
                 
                 // data is latest first, needed for api, but reverse for chart
                 data = data.reverse()
-                
+
                 // pop off the latest for display
                 latest_data = data.pop()
 
-                myLineChart.data.datasets[0].data = data.map(row => row.temperature01)
-                myLineChart.data.datasets[1].data = data.map(row => row.temperature02)
-                myLineChart.data.labels = data.map(row => row.timestamp)           
+                TempsLineChart.data.datasets[0].data = data.map(row => row.temperature01)
+                TempsLineChart.data.datasets[1].data = data.map(row => row.temperature02)
+                TempsLineChart.data.labels = data.map(row => row.timestamp)           
 
-                myLineChart.update('active')
+                TempsLineChart.update('active')
 
                 // just get the latest from API
                 const front_div = document.getElementById("front")
@@ -217,6 +274,7 @@
             })
     }
 
+
     function update_ubl_chart() {
         let api_url = "{{ url_for("read_ubl") | safe }}"
 
@@ -227,13 +285,17 @@
                 // data is latest first, needed for api, but reverse for chart
                 data = data.reverse()
 
-                // temp01 is rear
-                // temp02 is front
-                ublLineChart.data.datasets[0].data = data.map(row => row.redshift_entitled)
-                ublLineChart.data.datasets[1].data = data.map(row => row.redshift_used)
-                ublLineChart.data.labels = data.map(row => row.timestamp)
+                ublLineChartRedshift.data.datasets[0].data = data.map(row => row.redshift_entitled)
+                ublLineChartRedshift.data.datasets[1].data = data.map(row => row.redshift_used)
+                ublLineChartRedshift.data.labels = data.map(row => row.timestamp)
 
-                ublLineChart.update('active')
+                ublLineChartRedshift.update('active')
+
+                ublLineChartNuke.data.datasets[0].data = data.map(row => row.nuke_entitled)
+                ublLineChartNuke.data.datasets[1].data = data.map(row => row.nuke_used)
+                ublLineChartNuke.data.labels = data.map(row => row.timestamp)
+
+                ublLineChartNuke.update('active')
             })
     }
 

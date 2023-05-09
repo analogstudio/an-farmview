@@ -24,4 +24,6 @@ class UBL(Base):
     redshift_entitled = Column(Integer)
     redshift_used = Column(Integer)
     redshift_available = Column(Integer)
-    
+    nuke_entitled = Column(Integer)
+    nuke_used = Column(Integer)
+    nuke_available = Column(Integer)

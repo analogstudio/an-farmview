@@ -73,26 +73,38 @@ def api_temp():
     
     return data
 
-@app.get('/api/ubl')
-def api_ubl():
 
-    # int total mins
-    redshift_mins = an_farmview.ubl.get_redshift()
+@app.get('/api/ubl_info')
+def api_ubl_info(db: Session = Depends(get_db)):
+    """
+    returns some nicely formatted info easier in python than js...
+    """
 
-    mins_pretty = f'{redshift_mins:,}'
+    # read from our API
+    ubl = crud.get_ubl(db, skip=0, limit=1)
+    
+    # mins = [ubl[0].redshift_available, ubl[0].nuke_available]
+    mins = [ubl[0].redshift_available]
+
+    return_string = ''
+
+    for product in mins:
+        return_string += mins_info(product)
+
+    data = {
+        'redshift_mins': f'{mins[0]:,}',
+        'redshift_hours_mins': return_string,
+        }
+    
+    return data
+
+def mins_info(mins):
 
     # eg. if 10 machines / 10
-    test_mins = redshift_mins/10
+    test_mins = mins / 10
     time_days = math.floor(test_mins / (60*24))
     time_mins_remainder = test_mins % (60*24)
     time_hours = math.floor(time_mins_remainder / 60)
     time_mins = int(time_mins_remainder % 60)
 
-    time_pretty = f'eg. 10 machines 24/7 - {time_days}days {time_hours}hours {time_mins}mins'
-    
-    data = {
-        'redshift_mins': mins_pretty,
-        'redshift_hours_mins': time_pretty,
-        }
-    
-    return data
+    return f'eg. 10 machines 24/7 - {time_days}days {time_hours}hours {time_mins}mins'

@@ -36,6 +36,10 @@ def create_ubl(db: Session, ubl: schemas.UBLCreate):
         redshift_entitled=ubl.redshift_entitled,
         redshift_used=ubl.redshift_used,
         redshift_available=ubl.redshift_available,
+
+        nuke_entitled=ubl.nuke_entitled,
+        nuke_used=ubl.nuke_used,
+        nuke_available=ubl.nuke_available,
     )
     
     db.add(db_ubl)
