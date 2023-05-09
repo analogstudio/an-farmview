@@ -99,6 +99,10 @@ def api_ubl_info(db: Session = Depends(get_db)):
 
 def mins_info(mins, name):
 
+    # cover 'null'
+    if not isinstance(mins, int):
+        return ''
+    
     # eg. if 10 machines / 10
     test_mins = mins / 10
     time_days = math.floor(test_mins / (60*24))

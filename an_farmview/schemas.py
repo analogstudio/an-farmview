@@ -25,9 +25,10 @@ class UBLBase(BaseModel):
     redshift_used: int
     redshift_available: int
 
-    nuke_entitled: int
-    nuke_used: int
-    nuke_available: int
+    # allow None since a migration happened and None was default
+    nuke_entitled: int | None = ...
+    nuke_used: int | None = ...
+    nuke_available: int | None = ...
 
 
 class UBLCreate(UBLBase):
