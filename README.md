@@ -28,7 +28,7 @@ first time install dependencies
 poetry install
 ```
 
-~~~run the flask app (with `--debug` for dev)~~~
+
 ```bash
 poetry run python -m flask --app an_farmview.webserver.py run --host=0.0.0.0
 ```
@@ -50,4 +50,16 @@ When copying DATABASE_URL from heroku into `.env` copy it verbatum, it will be c
 sqlalchemy needs `psycopg2` for some reason not installed with it.
 ```bash
 poetry add psycopg2
+```
+
+## Alembic migrations
+Just like in django but needed to set it up [https://devpress.csdn.net/python/62f5096cc6770329307fb178.html](I followed this article)
+```bash
+poetry add alembic
+
+# make migrations
+poetry run alembic init migrations
+
+# migrate
+poetry run alembic upgrade head
 ```
