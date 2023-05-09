@@ -132,4 +132,4 @@ sql_app.db
 
 *.db
 
-alembic.ini
+
