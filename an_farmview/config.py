@@ -7,7 +7,8 @@ class Settings(BaseSettings):
     fno_password: str
     snmp_community: str = ''
     snmp_ip: str = ''
-    
+    an_farmview_api_url: str = 'empty'
+
     class Config:
         env_file = ".env"
 
