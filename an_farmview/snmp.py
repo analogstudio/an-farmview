@@ -1,4 +1,3 @@
-import os
 import pysnmp.hlapi
 
 from .config import settings
@@ -10,8 +9,8 @@ def get_sensor(oid):
 
     iterator = pysnmp.hlapi.getCmd(
         pysnmp.hlapi.SnmpEngine(),
-        pysnmp.hlapi.CommunityData(os.getenv('SNMP_COMMUNITY')),
-        pysnmp.hlapi.UdpTransportTarget((os.getenv('SNMP_IP'), 161)),
+        pysnmp.hlapi.CommunityData(settings.snmp_community),
+        pysnmp.hlapi.UdpTransportTarget((settings.snmp_ip, 161)),
         pysnmp.hlapi.ContextData(),
         pysnmp.hlapi.ObjectType(pysnmp.hlapi.ObjectIdentity(oid))
     )
