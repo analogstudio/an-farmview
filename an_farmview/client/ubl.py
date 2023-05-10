@@ -2,10 +2,12 @@ import os
 import requests
 import pprint
 
+from an_farmview.config import settings
+
 import an_farmview.ubl
 
 def post():
-    url = f'{os.getenv("AN_FARMVIEW_API_URL")}/api/setubl'
+    url = f'{settings.an_farmview_api_url}/api/setubl'
 
     data = an_farmview.ubl.get_ubl_data()
     print(f'{__name__} - data to post: {data}')
@@ -14,7 +16,7 @@ def post():
     pprint.pprint(r.json())
 
 def get():
-    url_get = f'{os.getenv("AN_FARMVIEW_API_URL")}/api/getubl'
+    url_get = f'{settings.an_farmview_api_url}/api/getubl'
     getr = requests.get(url_get)
     pprint.pprint(getr.json())
 
