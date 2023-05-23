@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     snmp_community: str = ''
     snmp_ip: str = ''
     an_farmview_api_url: str = 'empty'
+    max_table_row_count: int = 4000
 
     class Config:
         env_file = ".env"
