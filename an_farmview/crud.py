@@ -3,6 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy import desc
 
 from . import models, schemas
+from .config import settings
 
 
 def get_envmonitor(db: Session, envmonitor_id: int):
@@ -14,6 +15,10 @@ def get_envmonitors(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_envmonitor(db: Session, envmonitor: schemas.EnvMonitorCreate):
+
+
+    limit_rowcount(db=db, model=models.EnvMonitor)
+
     db_envmonitor = models.EnvMonitor(
         timestamp=func.now(),
         temperature01=envmonitor.temperature01,
@@ -30,7 +35,11 @@ def get_ubl(db: Session, skip: int=0, limit: int=100):
     return db.query(models.UBL).order_by(desc(models.UBL.timestamp)).offset(skip).limit(limit).all()
 
 
+
 def create_ubl(db: Session, ubl: schemas.UBLCreate):
+
+    limit_rowcount(db=db, model=models.UBL)
+
     db_ubl = models.UBL(
         timestamp=func.now(),
         redshift_entitled=ubl.redshift_entitled,
@@ -46,3 +55,23 @@ def create_ubl(db: Session, ubl: schemas.UBLCreate):
     db.commit()
     db.refresh(db_ubl)
     return db_ubl
+
+def limit_rowcount(db: Session, model):
+
+    row_count = db.query(model).count()
+
+    if row_count > settings.max_table_row_count:
+        to_delete = row_count - settings.max_table_row_count
+
+        rows_to_delete = db.query(model).order_by(model.id.asc()).limit(to_delete)
+
+        for row in rows_to_delete:
+            print(f'{row.id}, {row.timestamp}')
+            db.delete(row)
+
+        db.commit()
+        print(f'Rows: {row_count} is greater than settings {settings.max_table_row_count}')
+    else:
+        print(f'Rows: {row_count} is not greater than settings {settings.max_table_row_count}')
+
+    return row_count

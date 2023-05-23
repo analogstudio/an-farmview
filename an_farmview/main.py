@@ -97,8 +97,8 @@ def api_ubl_info(db: Session = Depends(get_db)):
     
     return data
 
-def mins_info(mins, name):
 
+def mins_info(mins, name):
     # cover 'null'
     if not isinstance(mins, int):
         return ''
