@@ -29,10 +29,6 @@ poetry install
 ```
 
 
-```bash
-poetry run python -m flask --app an_farmview.webserver.py run --host=0.0.0.0
-```
-
 run fastapi via uvicorn, use same port as flask did and allow other IPs
 ```bash
 poetry run uvicorn an_farmview.main:app --reload --host 0.0.0.0 --port 5000
