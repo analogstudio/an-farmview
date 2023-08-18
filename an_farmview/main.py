@@ -42,6 +42,7 @@ def create_envmonitor(envmonitor: schemas.EnvMonitorCreate, db: Session = Depend
 
 @app.get("/envmonitors", response_model=List[schemas.EnvMonitor])
 def read_envmonitors(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
+    # queries DB
     envmonitors = crud.get_envmonitors(db, skip=skip, limit=limit)
     return envmonitors
 
@@ -83,12 +84,13 @@ def api_ubl_info(db: Session = Depends(get_db)):
     # read from our API
     ubl = crud.get_ubl(db, skip=0, limit=1)
     
-    mins = [ubl[0].redshift_available, ubl[0].nuke_available]
+    mins = [ubl[0].redshift_available, ubl[0].nuke_available, ubl[0].vray_available]
 
     return_string = []
 
     return_string.append(mins_info(mins[0], 'Redshift'))
     return_string.append(mins_info(mins[1], 'Nuke'))
+    return_string.append(mins_info(mins[2], 'Vray'))
 
     data = {
         'redshift_mins': f'{mins[0]:,}',

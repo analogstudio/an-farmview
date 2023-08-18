@@ -68,4 +68,14 @@ def get_ubl_data():
             
             ubl_data.update(nuke_data)
 
+        if feature_name.lower() == 'deadline-vray-usabled':
+            vray_data = {
+                'vray_entitled': value['totalCount'],
+                'vray_used' : value['totalUsed'],
+                'vray_available': value['totalAvailable']
+                }
+            
+            ubl_data.update(vray_data)
+
+
     return ubl_data

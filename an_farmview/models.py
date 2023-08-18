@@ -27,3 +27,6 @@ class UBL(Base):
     nuke_entitled = Column(Integer)
     nuke_used = Column(Integer)
     nuke_available = Column(Integer)
+    vray_entitled = Column(Integer)
+    vray_used = Column(Integer)
+    vray_available = Column(Integer)

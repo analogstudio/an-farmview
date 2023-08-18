@@ -15,8 +15,6 @@ def get_envmonitors(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_envmonitor(db: Session, envmonitor: schemas.EnvMonitorCreate):
-
-
     limit_rowcount(db=db, model=models.EnvMonitor)
 
     db_envmonitor = models.EnvMonitor(
@@ -35,7 +33,6 @@ def get_ubl(db: Session, skip: int=0, limit: int=100):
     return db.query(models.UBL).order_by(desc(models.UBL.timestamp)).offset(skip).limit(limit).all()
 
 
-
 def create_ubl(db: Session, ubl: schemas.UBLCreate):
 
     limit_rowcount(db=db, model=models.UBL)
@@ -49,12 +46,18 @@ def create_ubl(db: Session, ubl: schemas.UBLCreate):
         nuke_entitled=ubl.nuke_entitled,
         nuke_used=ubl.nuke_used,
         nuke_available=ubl.nuke_available,
+
+        vray_entitled=ubl.vray_entitled,
+        vray_used=ubl.vray_used,
+        vray_available=ubl.vray_available,
+
     )
     
     db.add(db_ubl)
     db.commit()
     db.refresh(db_ubl)
     return db_ubl
+
 
 def limit_rowcount(db: Session, model):
 
@@ -70,8 +73,8 @@ def limit_rowcount(db: Session, model):
             db.delete(row)
 
         db.commit()
-        print(f'Rows: {row_count} is greater than settings {settings.max_table_row_count}')
+        print(f'Row count: {row_count} is greater than settings {settings.max_table_row_count}')
     else:
-        print(f'Rows: {row_count} is not greater than settings {settings.max_table_row_count}')
+        print(f'Rows count: {row_count} is not greater than settings {settings.max_table_row_count}')
 
     return row_count
