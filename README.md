@@ -1,7 +1,9 @@
 # an-farmview
 
-Python 3.11.3, ~~Flask~~ FastAPI based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
-Refreshes every 30seconds
+Python 3.11.3, FastAPI based webpage using SNMP to get temperatures, all running via [poetry](https://python-poetry.org/).
+  - Run `client/record_temp.bat` locally at an interval to record temperatures to the database
+  - Web page (`main.py/home.html`) only reads data from the database
+  - Web page refreshes every 30 seconds
 
 
 create `/an_farmview/.env` file to set some environment variables, use `env_template.txt` as an example:
@@ -14,9 +16,7 @@ Make sure poetry is using Python 3.11.3
 
 ```bash
 $ where python
-...
 C:\Program Files\Python311\python.exe
-...
 ```
 
 ```bash
@@ -28,10 +28,11 @@ first time install dependencies
 poetry install
 ```
 
+# Client
+### Record temperature from SNMP
+Create a scheduled task to run the client bat file `an_farmview/client/record_temp.bat` at a 5min interval or whatever you like.
 
-```bash
-poetry run python -m flask --app an_farmview.webserver.py run --host=0.0.0.0
-```
+# Dev
 
 run fastapi via uvicorn, use same port as flask did and allow other IPs
 ```bash
@@ -44,8 +45,9 @@ runs here
 http://localhost:5000/
 ```
 
-## heroku
-When copying DATABASE_URL from heroku into `.env` copy it verbatum, it will be converted to `postgresql://` instead of `postgres://` so it works local and on heroku
+
+## Heroku
+When you manually copy $DATABASE_URL from heroku into `.env` copy it verbatum, it will be converted to `postgresql://` instead of `postgres://` so it works local and on heroku
 
 sqlalchemy needs `psycopg2` for some reason not installed with it.
 ```bash
@@ -54,11 +56,15 @@ poetry add psycopg2
 
 ## Alembic migrations
 Just like in django but needed to set it up [https://devpress.csdn.net/python/62f5096cc6770329307fb178.html](I followed this article)
+
 ```bash
 poetry add alembic
 
-# make migrations
+# init migrations (first time only)
 poetry run alembic init migrations
+
+# make migration(revision?)
+poetry run alembic revision --autogenerate -m "added vray ubl"
 
 # migrate
 poetry run alembic upgrade head

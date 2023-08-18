@@ -24,6 +24,10 @@
         <canvas id="ubl-chart-nuke"></canvas>
     </div>
 
+    <div class="chart-container" style="position: relative; height:25vh; width:95vw">
+        <canvas id="ubl-chart-vray"></canvas>
+    </div>
+    
     <h2 id="timestamp"></h1>
 </body>
 
@@ -181,6 +185,58 @@
       }
     });
 
+    const ctxVray = document.getElementById('ubl-chart-vray');
+    const ublLineChartVray = new Chart(ctxVray, {
+      type: 'line',
+      data: {
+          labels: [],
+          datasets: [
+            {
+                fill: '1',
+                label: 'Vray entitled mins',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(166, 132, 41, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                pointStyle: false,
+            },
+            {
+                fill: 'origin',
+                label: 'Vray used mins',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(204, 115, 27, 0.2)',
+                borderColor: 'rgba(204, 115, 27, 1)',
+            },
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        "hour": "d MMM HH:mm",
+                    },
+                    unit: "hour",
+                },
+                ticks: {
+                    maxTicksLimit: 6,
+                },
+                
+            }
+        },
+        plugins: {
+            decimation: {
+                enabled: true,
+                algorithm: 'lttb',
+                samples: 50,
+            }
+          },
+      }
+    });
+
 
     // intialise
     document.getElementById("timestamp").innerHTML = timeStamp()
@@ -234,6 +290,7 @@
 
 
     function update_temps_chart() {
+        // read_envmonitors from main.py reads from the database
         let api_url = "{{ url_for("read_envmonitors") | safe }}"
 
         fetch(api_url)
@@ -257,7 +314,7 @@
                 const rear_div = document.getElementById("rear")
 
                 let front_text = "front: " + latest_data.temperature02 + "c"
-                if (latest_data.temperature02 < 30) {
+                if (latest_data.temperature02 < 28) {
                     front_text += "🥶"
                 }
                 if (latest_data.temperature02 > 32) {
@@ -266,7 +323,7 @@
                 front_div.innerHTML = front_text
 
                 let rear_text = "rear: " + latest_data.temperature01 + "c"
-                if (latest_data.temperature01 > 35) {
+                if (latest_data.temperature01 > 36) {
                     rear_text += "🥵"
                 }
                 rear_div.innerHTML = rear_text
@@ -296,6 +353,12 @@
                 ublLineChartNuke.data.labels = data.map(row => row.timestamp)
 
                 ublLineChartNuke.update('active')
+
+                ublLineChartVray.data.datasets[0].data = data.map(row => row.vray_entitled)
+                ublLineChartVray.data.datasets[1].data = data.map(row => row.vray_used)
+                ublLineChartVray.data.labels = data.map(row => row.timestamp)
+
+                ublLineChartVray.update('active')
             })
     }
 
