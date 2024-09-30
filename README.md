@@ -12,7 +12,7 @@ SNMP_COMMUNITY=public
 SNMP_IP=ip of snmp device
 ```
 
-Make sure poetry is using Python 3.11.3
+Make sure poetry is using Python 3.11
 
 ```bash
 $ where python
