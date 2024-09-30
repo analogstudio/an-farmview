@@ -95,7 +95,7 @@ def api_ubl_info(db: Session = Depends(get_db)):
     data = {
         'redshift_mins': f'{mins[0]:,}',
         'redshift_hours_mins': '<br>'.join(return_string),
-        }
+    }
     
     return data
 

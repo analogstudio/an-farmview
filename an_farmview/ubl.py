@@ -35,14 +35,19 @@ def get_ubl_data():
     try:
         data = session.get(url=SERVER_FEATURE_SUMMARY_URL, headers=auth_header).json()
     except Exception as e:
-        print("Error while collecting capabilities: {e}")
+        print(f"Error while collecting capabilities: {e}")
 
     ubl_data = {}
 
     for feature_name, value in data.items():
 
         # We only have one version of any license
-        value = value['0.00']
+        value = value.get('0.00')
+
+        # feature named 'enable-usage' has been added? It does not have the value[0.00]
+        if not value:
+            print(f"The feature named \'{feature_name}\' does not have expected data, skipping...")
+            continue
 
         print("Feature:       {:} ".format(feature_name))
         print("    Entitled:  {:,}".format(int(value['totalCount'])))
@@ -55,7 +60,7 @@ def get_ubl_data():
                 'redshift_entitled': value['totalCount'],
                 'redshift_used' : value['totalUsed'],
                 'redshift_available': value['totalAvailable']
-                }
+            }
             
             ubl_data.update(redshift_data)
 
@@ -64,7 +69,7 @@ def get_ubl_data():
                 'nuke_entitled': value['totalCount'],
                 'nuke_used' : value['totalUsed'],
                 'nuke_available': value['totalAvailable']
-                }
+            }
             
             ubl_data.update(nuke_data)
 
@@ -73,7 +78,7 @@ def get_ubl_data():
                 'vray_entitled': value['totalCount'],
                 'vray_used' : value['totalUsed'],
                 'vray_available': value['totalAvailable']
-                }
+            }
             
             ubl_data.update(vray_data)
 
