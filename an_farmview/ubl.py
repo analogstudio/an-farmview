@@ -19,6 +19,7 @@ def get_ubl_data():
         'password': settings.fno_password
     }
 
+
     session = requests.Session()
 
     try:
@@ -26,7 +27,10 @@ def get_ubl_data():
     except Exception as e:
         print(f"Error when trying to log in: {e}")
 
-    auth_token = login_request['token']
+    auth_token = login_request.get('token')
+    if not auth_token:
+        print(login_request)
+        return
 
     auth_header = {
         'Authorization': f'Bearer {auth_token}'

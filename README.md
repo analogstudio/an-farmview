@@ -45,6 +45,23 @@ runs here
 http://localhost:5000/
 ```
 
+### UBL
+This script lists the features hosted on your license server. You'll need to set up a password first:
+ 
+1. Login to end user portal (thinkbox.flexnetoperations.com)
+2. Click Search Servers from the option on the right
+3. Click the License Server ID (note the ID for later)
+4. On the View Server page click the Set Password option (far right of the options displayed above Add-Ons)
+
+The Set Password page lists some password rules and allows the user to set the password for the ‘admin’ user
+ 
+Once that is set, you'll need to set two environment variables:
+
+FNO_SERVER: The server ID you spotted in step 3 earlier
+FNO_PASSWORD: The password you set in step 4
+
+To set these safely on Linux to avoid keeping the password in history
+or the environment it's best to run the script like so:
 
 ## Heroku
 When you manually copy $DATABASE_URL from heroku into `.env` copy it verbatum, it will be converted to `postgresql://` instead of `postgres://` so it works local and on heroku
